@@ -1,4 +1,4 @@
-from flask import Flask,request,redirect,url_for,render_template,make_response
+from flask import Flask,request,redirect,url_for,render_template,make_response,jsonify
 app=Flask(__name__)
 users={} #to store user data
 @app.route('/')
@@ -39,4 +39,25 @@ def dashboard():
         return render_template('dashboard.html')
     else:
         return 'pls login view dashboard'
+@app.route('/deposit',methods=['GET','PUT'])
+def deposit():
+    if request.cookies.get('user'):
+        if request.method=='PUT':
+            username=request.cookies.get('user')
+            print(request.get_json())
+            deposit_amount=int(request.get_json()['amount']) #500
+            if deposit_amount>0:
+                if deposit_amount %100 ==0:
+                    if deposit_amount<=50000:
+                        users[username]['Amount']=users[username]['Amount']+deposit_amount
+                        return f'{deposit_amount}'
+                    else:
+                        return jsonify({'message':'Amount should be <= 50000'})
+                else:
+                    return jsonify({'message':'Amount should be multiple 100'})
+            else:
+                return jsonify({"message":'Amount should be > 0'})
+        return render_template('deposit.html') 
+    else:
+        return 'pls login view deposit'
 app.run(use_reloader=True,debug=True)

@@ -23,7 +23,7 @@ document.getElementById("amountForm").addEventListener("submit", function(event)
 
     const amount = document.getElementById("amount").value;
 
-    fetch("https://your-api-endpoint.com/update-amount", {
+    fetch("{{url_for('deposit')}}", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
