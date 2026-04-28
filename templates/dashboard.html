@@ -54,9 +54,9 @@
         <h2>My Dashboard</h2>
 
         <div class="nav-links">
-            <a href="#">Withdraws</a>
+            <a href="{{url_for('withdraw')}}">Withdraws</a>
             <a href="{{url_for('deposit')}}">deposits</a>
-            <a href="#"></a>
+            <a href="{{url_for('balance')}}">Balance</a>
         </div>
         {{request.cookies.get('user')}}
         <form action="#" method="POST">

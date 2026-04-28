@@ -60,4 +60,34 @@ def deposit():
         return render_template('deposit.html') 
     else:
         return 'pls login view deposit'
+@app.route('/withdraw',methods=['GET','PUT'])
+def withdraw():
+    if request.cookies.get('user'):
+        if request.method=='PUT':
+            username=request.cookies.get('user')
+            print(request.get_json())
+            withdraw_amount=int(request.get_json()['amount']) #500
+            balance_amount=users[username]['Amount']
+            if withdraw_amount>0:
+                if withdraw_amount %100 ==0:
+                    if withdraw_amount<=balance_amount:
+                        users[username]['Amount']=balance_amount-withdraw_amount
+                        return jsonify({'message':f'{users[username]['Amount']} after withdraw'})
+                    else:
+                        return jsonify({'message':f'Amount exceeded than Balance {balance_amount}'})
+                else:
+                    return jsonify({'message':'Amount should be multiple 100'})
+            else:
+                return jsonify({"message":'Amount should be > 0'})
+        return render_template('withdraw.html') 
+    else:
+        return 'pls login to withdraw'
+@app.route('/balance',methods=['GET'])
+def balance():
+    if request.cookies.get('user'):
+        username=request.cookies.get('user')
+        balance_amount=users[username]['Amount']
+        return render_template('balance.html',balance_amount=balance_amount)
+    else:
+        return redirect(url_for('login'))
 app.run(use_reloader=True,debug=True)
